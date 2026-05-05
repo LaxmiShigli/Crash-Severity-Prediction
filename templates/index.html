@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-shell">
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">~</span>
+            <div>
+                <p class="brand-name">CrashPredictAI</p>
+                <p class="brand-subtitle">Severity Intelligence</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('prediction_page') }}">Prediction</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <button class="slide-nav slide-prev" type="button" aria-label="Previous slide">&#8249;</button>
+            <div class="slides">
+                {% for slide in slides %}
+                <article class="slide {% if loop.first %}active{% endif %}">
+                    <p class="eyebrow">{{ slide.eyebrow }}</p>
+                    <h1>{{ slide.title }}</h1>
+                    <p class="slide-copy">{{ slide.description }}</p>
+                    <div class="hero-actions">
+                        <a class="primary-btn" href="{{ url_for('prediction_page') }}">Prediction</a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            <button class="slide-nav slide-next" type="button" aria-label="Next slide">&#8250;</button>
+            <div class="slide-dots">
+                {% for slide in slides %}
+                <button
+                    class="dot {% if loop.first %}active{% endif %}"
+                    type="button"
+                    aria-label="Go to slide {{ loop.index }}"
+                    data-slide-index="{{ loop.index0 }}"
+                ></button>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

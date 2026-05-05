@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-shell">
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">~</span>
+            <div>
+                <p class="brand-name">CrashPredictAI</p>
+                <p class="brand-subtitle">Severity Intelligence</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('prediction_page') }}">Prediction</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="results-grid page-start" id="results" {% if result %}data-has-result="true"{% endif %}>
+            <div class="glass-card result-card spotlight">
+                {% if result %}
+                <div class="panel-heading">
+                    <p class="section-tag">Overall Severity</p>
+                    <h2>{{ result.overall_band }} Risk</h2>
+                </div>
+
+                <div
+                    class="gauge"
+                    data-score="{{ result.overall_score }}"
+                    style="--score: {{ result.overall_score }};"
+                >
+                    <div class="gauge-inner">
+                        <span class="gauge-score">{{ result.overall_score }}%</span>
+                        <span class="gauge-label">{{ result.overall_band }} Severity</span>
+                    </div>
+                </div>
+
+                <div class="severity-scale">
+                    <div class="scale-track">
+                        <span class="band band-low">Low</span>
+                        <span class="band band-medium">Medium</span>
+                        <span class="band band-high">High</span>
+                        <span class="scale-marker" style="left: {{ result.graph_marker }}%;"></span>
+                    </div>
+                    <div class="scale-labels">
+                        <span>0-20</span>
+                        <span>21-59</span>
+                        <span>60-100</span>
+                    </div>
+                </div>
+
+                <p class="recommendation">{{ result.recommended_action }}</p>
+                <div class="hero-actions">
+                    <a class="primary-btn" href="{{ url_for('prediction_page') }}">Back To Prediction</a>
+                </div>
+                {% else %}
+                <div class="panel-heading">
+                    <p class="section-tag">Result</p>
+                    <h2>Prediction unavailable</h2>
+                    <p class="support-copy">
+                        {% if model_message %}{{ model_message }}{% else %}Submit the input form to view the result.{% endif %}
+                    </p>
+                </div>
+                <div class="hero-actions">
+                    <a class="primary-btn" href="{{ url_for('prediction_page') }}">Go To Prediction</a>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

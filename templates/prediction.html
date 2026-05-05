@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-shell">
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">~</span>
+            <div>
+                <p class="brand-name">CrashPredictAI</p>
+                <p class="brand-subtitle">Severity Intelligence</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('prediction_page') }}">Prediction</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="predict-layout page-start" id="predict-panel">
+            <div class="glass-card predict-card">
+                <div class="panel-heading">
+                    <p class="section-tag">Severity Prediction</p>
+                    <h2>Input Parameters</h2>
+                    <p class="support-copy">Enter crash scenario details to predict severity.</p>
+                </div>
+
+                {% if model_message %}
+                <div class="status-banner">
+                    <strong>Model status:</strong> {{ model_message }}
+                </div>
+                {% endif %}
+
+                <form class="predict-form" method="post" action="{{ url_for('result_page') }}">
+                    <label class="field-group range-group">
+                        <span class="field-label">Speed (km/h)</span>
+                        <div class="range-header">
+                            <input
+                                id="speed"
+                                name="speed"
+                                type="range"
+                                min="0"
+                                max="200"
+                                value="{{ form_values.speed }}"
+                            >
+                            <span class="range-value"><span id="speed-value">{{ form_values.speed }}</span></span>
+                        </div>
+                        <div class="range-scale">
+                            <span>0 km/h</span>
+                            <span>200 km/h</span>
+                        </div>
+                    </label>
+
+                    <label class="field-group">
+                        <span class="field-label">Weather Condition</span>
+                        <select name="weather" required>
+                            <option value="" disabled {% if not form_values.weather %}selected{% endif %}>Select weather condition</option>
+                            {% for option in feature_options.weather %}
+                            <option value="{{ option }}" {% if form_values.weather == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label class="field-group">
+                        <span class="field-label">Location Type</span>
+                        <select name="location" required>
+                            <option value="" disabled {% if not form_values.location %}selected{% endif %}>Select location type</option>
+                            {% for option in feature_options.location %}
+                            <option value="{{ option }}" {% if form_values.location == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label class="field-group">
+                        <span class="field-label">Time of Day</span>
+                        <select name="time_of_day" required>
+                            <option value="" disabled {% if not form_values.time_of_day %}selected{% endif %}>Select time of day</option>
+                            {% for option in feature_options.time_of_day %}
+                            <option value="{{ option }}" {% if form_values.time_of_day == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <button class="primary-btn full-width" type="submit" {% if not model_ready %}disabled{% endif %}>
+                        Predict Severity
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock %}
